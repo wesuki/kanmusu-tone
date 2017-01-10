@@ -22,7 +22,11 @@ class KcwikiZhSpider(scrapy.Spider):
                 callback=self.parse_kanmusu)
 
     def parse_kanmusu(self, response) :
+        ## example result: '晓型 / 一番舰 / 驱逐舰\n'
+        category_text = (response.css('div.tabbertab table.wikitable'))[0].xpath('//td[@colspan="4"]/text()').extract_first()
+        
         yield {
           'name' : response.css('.firstHeading::text').extract_first(),
           'texts' : response.xpath('//h3[1]/following::table[1]//td[@lang]/text()').extract(),
+          'category-text' : category_text,
         }
